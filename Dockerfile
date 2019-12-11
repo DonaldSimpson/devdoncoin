@@ -37,11 +37,15 @@ ENV LITECOIN_DATA=/home/litecoin/.litecoin
 RUN curl -O https://download.litecoin.org/litecoin-${LITECOIN_VERSION}/linux/litecoin-${LITECOIN_VERSION}-x86_64-linux-gnu.tar.gz \
   && curl https://download.litecoin.org/litecoin-${LITECOIN_VERSION}/linux/litecoin-${LITECOIN_VERSION}-linux-signatures.asc | gpg --verify - \
   && tar --strip=2 -xzf *.tar.gz -C /usr/local/bin \
-  && rm *.tar.gz
+  && rm *.tar.gz \
+  && mkdir -p "$LITECOIN_DATA" \
+  && chmod 770 "$LITECOIN_DATA" \
+  && chown -R litecoin "$LITECOIN_DATA"
 
 VOLUME ["/home/litecoin/.litecoin"]
 
 EXPOSE 9332 9333 19332 19333 19444
+
 
 ### switch user to litecoin
 USER litecoin
