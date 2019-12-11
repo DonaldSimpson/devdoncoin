@@ -9,9 +9,9 @@
 # - ngrok - to create and manage a tunnel
 # - jq - parse the json returned by the ngrok api
 # - grep and awk - figure out the new location details
-# - PHP - a simple redirect to the new location
+# - PHP - perform a simple redirect to the new location
 # - SCP - and ssh keys to upload
-# - Apache - to erve the PHP redirect file
+# - Apache - to serve the PHP redirect
 # - AWS - to host the web page
 
 

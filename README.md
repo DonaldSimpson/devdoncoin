@@ -1,23 +1,30 @@
-# devdoncoin
+# doncoin
 
-This repo contains a pipeline and supporting files to
+This repo contains an example pipeline and supporting files to:
 
-build, lint, scan, publish, deploy, test and clean up
+build, lint, security scan, push to registry, deploy to Kubernetes, test and clean up
 
-the example "doncoin" (which runs litecoin) application
+the example "doncoin" application (which just runs litecoin)
 
 via a Jenkins pipeline running on Kubernetes
 
-using kuberenets to provision containers for the Stages
+using Kubernetes to dynamically provision containers for the Pipeline Stages
 
-and deploying a StatefulSet with resource limits and persistentvolumes to the target kubernetes namespaceName
+and deploying a StatefulSet with resource limits and PersistentVolumes to the target Kubernetes namespace
 
 using the script https://github.com/DonaldSimpson/devdoncoin/blob/master/kubectl_commands.sh
 
 and the .kube/config file it generates to apply, test and cleanup the app
 
 
+The Pipeline makes a few assumptions:
 
-"doncoin" is built automatically via dockerhub: https://hub.docker.com/r/donaldsimpson/doncoin
+- Kubernetes Cloud configured in Jenkins > config
+- TwistLock endpoint available with Jenkins plugin installed and configured
+- the example Shared Libraries used (& outlined) in the pipeline are implicitly loaded
+- privalged containers are permitted
+- pre-req credentials are configured (SA TOKEN for target k8s namespace, git repo credentials, registry credentials, etc)
+
+"doncoin" is also being built automatically via dockerhub: https://hub.docker.com/r/donaldsimpson/doncoin
 
 running "docker pull donaldsimpson/doncoin" should pull doncoin and run litecoin 0.17.1 with output going to the console
