@@ -1,11 +1,12 @@
 #!/bin/bash
 
-# I wrote and use this script to maintain a reverse tunel via ngrok.
+# I wrote and use this script to maintain a reverse tunnel via ngrok.
 
 # this script demonstrates usage of the following tools
 # - Jenkins - to run the script periodically
 # - bash - this script
-# - ngrok - to create a tunnel
+# - pidof - check for a running process
+# - ngrok - to create and manage a tunnel
 # - jq - parse the json returned by the ngrok api
 # - grep and awk - figure out the new location details
 # - PHP - a simple redirect to the new location
@@ -18,22 +19,22 @@
 pidof  ngrok >/dev/null
 if [[ $? -ne 0 ]] ; then
 		# A (re)start and update is required
-    echo "Starting ngrok on $(date)"
-    # Start up a new instance of ngrok
-    BUILD_ID=dontKillMe nohup /root/ngrok/ngrok http -region eu 80 &
+		echo "Starting ngrok on $(date)"
+		# Start up a new instance of ngrok
+		BUILD_ID=dontKillMe nohup /root/ngrok/ngrok http -region eu 80 &
 		# Give it a moment before testing it...
 		echo "Sleeping for 15 seconds..."
-    sleep 15
-    # Get the updated publish_url value from the ngrok api
+		sleep 15
+		# Get the updated publish_url value from the ngrok api
 		export NGROKURL=`curl -s http://127.0.0.1:4040/api/tunnels | jq '.' | grep public_url | grep https | awk -F\" '{print $4}'`
-    echo "NGROKURL is $NGROKURL"
-    # add that to a one-line PHP redirect page
+		echo "NGROKURL is $NGROKURL"
+		# add that to a one-line PHP redirect page
 		echo "<?php header('Location: $NGROKURL/zm'); exit;?>" > zm.php
-    # upload that to my AWS host
-    echo "scp'ing zm.php to AWS host..."
+		# upload that to my AWS host
+		echo "scp'ing zm.php to AWS host..."
 		scp -i /MY_AWS_KEY_FILE.pem zm.php MY_AWS_USER@MY_AWS_HOST.amazonaws.com:/MY_HTDOCS_DIR/ZoneMinder.php
 		echo "Transfer complete."
-    # Send an update message via email
+		# Send an update message via email
 		echo "New ngrok url is $NGROKURL/zm" | mailx -s "ngrok zm url updated" MY_EMAIL@gmail.com
 else
 		# Nothing needed, carry on
