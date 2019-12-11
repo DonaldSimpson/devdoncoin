@@ -1,0 +1,53 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: doncoin
+  labels:
+    app: doncoin
+spec:
+  ports:
+  - port: 80
+    name: dcsset
+  clusterIP: None
+  selector:
+    app: doncoin
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: dcsset
+spec:
+  serviceName: "doncoin"
+  replicas: 2
+  selector:
+    matchLabels:
+      app: doncoin
+  template:
+    metadata:
+      labels:
+        app: doncoin
+    spec:
+      containers:
+      - name: doncoin
+        image: donaldsimpson/doncoin:TAG_NUMBER
+        resources:
+          requests:
+            cpu: "250m"
+            memory: "256Mi"
+          limits:
+            cpu: 2
+            memory: "512Mi"
+        ports:
+        - containerPort: 80
+          name: dcsset
+        volumeMounts:
+        - name: dcdata
+          mountPath: /home/litecoin/.litecoin
+  volumeClaimTemplates:
+  - metadata:
+      name: dcdata
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      resources:
+        requests:
+          storage: 1Gi
