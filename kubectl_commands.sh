@@ -1,18 +1,16 @@
 #!/bin/bash
 
 ### evironment variables
-### the token is passed in as a secret
-### other values are set in the pipeline
-### all of them should be verified...
-
+### - the token is passed in as a secret
+### - other values are set in the pipeline
+### - all of them should be tested & verified...
 export PIPELINE_API="https://api-endpoint:8443"
 export PIPELINE_CONTEXT="k8s-context"
 export PIPELINE_TOKEN=$*
 export PIPELINE_USER="sa-${PIPELINE_NAMESPACE}"
 
 ### set up a .kube/config with the settings required
-### using the variables/params we need
-
+### setting the variables/params we have
 mkdir -p ~/.kube
 echo "
 apiVersion: v1
@@ -39,7 +37,7 @@ users:
 
 ### the pipeline calls this script with one of these args
 ### to apply, delete or test as required
-### the test is very simplistic but could be extended
+### the test is simplistic but could be extended
 case "${ACTION}" in
 test)  echo "ACTION to perform: test"
     kubectl -n ${PIPELINE_NAMESPACE} get pods

@@ -3,14 +3,14 @@
 # I wrote and use this script to maintain a reverse tunnel via ngrok.
 
 # this script demonstrates usage of the following tools
-# - Jenkins - to run the script periodically
+# - Jenkins - to checkout and run the script periodically
 # - bash - this script
 # - pidof - check for a running process
 # - ngrok - to create and manage a tunnel
 # - jq - parse the json returned by the ngrok api
 # - grep and awk - figure out the new location details
 # - PHP - perform a simple redirect to the new location
-# - SCP - and ssh keys to upload
+# - scp - and ssh keys to upload
 # - Apache - to serve the PHP redirect
 # - AWS - to host the web page
 
@@ -20,7 +20,7 @@ pidof  ngrok >/dev/null
 if [[ $? -ne 0 ]] ; then
   # A (re)start and update is required
   echo "Starting ngrok on $(date)"
-  # Start up a new instance of ngrok
+  # Start up a new instance of ngrok, avoid reaping
   BUILD_ID=dontKillMe nohup /root/ngrok/ngrok http -region eu 80 &
   # Give it a moment before testing it...
   echo "Sleeping for 15 seconds..."
@@ -30,7 +30,7 @@ if [[ $? -ne 0 ]] ; then
   echo "NGROKURL is $NGROKURL"
   # add that to a one-line PHP redirect page
   echo "<?php header('Location: $NGROKURL/zm'); exit;?>" > zm.php
-  # upload that to my AWS host
+  # upload that to the web host
   echo "scp'ing zm.php to AWS host..."
   scp -i /MY_AWS_KEY_FILE.pem zm.php MY_AWS_USER@MY_AWS_HOST.amazonaws.com:/MY_HTDOCS_DIR/ZoneMinder.php
   echo "Transfer complete."
