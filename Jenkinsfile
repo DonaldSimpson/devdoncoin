@@ -23,13 +23,13 @@ podTemplate( containers: [
       )
     }
 
-    // This is only dealing with one Dockerfile but could process a directory of them
+    // This is only dealing with one Dockerfile but could also process a directory of them
     stage('Build and Publish Images'){
       buildAndPublishImages()
     }
 
-    // check the newly built docker image for CVEs with TwistLock
-    // this is using implicitly loaded shared libraries from another git repo
+    // Check the newly built docker image for CVEs with TwistLock.
+    // This is using implicitly loaded shared libraries from another git repo
     // you can adjust this to fail the build or warn, depending on preferences
     stage('TwistLock Scan Docker Images'){
         tw_scan_image("DOCKER_REGISTRY/doncoin:${env.BUILD_NUMBER}")
@@ -132,6 +132,8 @@ def publishImage(String imageName){
   }
 }
 
+// See this blog post for a quick intro to Shared Libraries with Jenkins:
+// https://www.donaldsimpson.co.uk/2019/02/06/jenkins-global-pipeline-libraries-a-v-quick-start-guide/
 
 // ### some of the above stages make use of shared libraries from these libs:
 
