@@ -4,7 +4,8 @@
 
 ### There's an automated build on Dockerhub here:
 ### https://hub.docker.com/r/donaldsimpson/doncoin
-### that pulls this file on change and publishes "donaldsimpson/doncoin" to Dockerhub
+### that pulls this file on change and publishes the updated version of
+### "donaldsimpson/doncoin" to Dockerhub
 
 FROM debian:stable-slim
 
