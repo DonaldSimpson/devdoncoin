@@ -30,3 +30,4 @@ The Pipeline makes a few assumptions:
 "doncoin" is also being built automatically via dockerhub: https://hub.docker.com/r/donaldsimpson/doncoin
 
 so simply running "docker run donaldsimpson/doncoin" should pull doncoin and run litecoin 0.17.1 with output going to the console
+
